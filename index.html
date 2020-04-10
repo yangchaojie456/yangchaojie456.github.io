@@ -1,11 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>杨朝杰的GitHub</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        img {}
+    </style>
 </head>
-<body>
-    welcome 
+
+<body oncontextmenu="return false">
+
+
+    <img draggable="true" id="move" src="./前端知识.png" alt="">
+
+
+    <script>
+        var img = document.getElementById('move')
+
+        var isClick = false,
+            startX = 0,
+            startY = 0,
+            moveX = 0,
+            moveY = 0,
+            distanceX = 0,
+            distanceY = 0;
+
+        img.onmousedown = function (e) {
+            if (e.buttons == 2) {
+                isClick = true
+                startX = e.clientX
+                startY = e.clientY
+                img.style.cursor = "grab"
+
+
+
+
+                var moveTimeStart = 0
+                var moveTimeEnd = 0
+                var T = 0
+                img.onmousemove = function (e) {
+                    if (isClick && e.buttons == 2) {
+
+                        moveTimeStart = new Date().getTime()
+                        // 计算惯性
+                        T = moveTimeStart - moveTimeEnd
+                        // console.log(T)
+                        moveTimeEnd = new Date().getTime()
+
+                        moveX = e.clientX
+                        moveY = e.clientY
+                        distanceX = moveX - startX
+                        distanceY = moveY - startY
+                        startX = moveX
+                        startY = moveY
+
+
+                        window.scrollTo(window.scrollX - distanceX, window.scrollY - distanceY)
+                    }
+                }
+                img.onmouseup = function (e) {
+                    isClick = false
+
+                    window.scrollTo({
+                        left: window.scrollX - distanceX * (10 - T > 0 ? 10 - T : 0) * 5,
+                        top: window.scrollY - distanceY * (10 - T > 0 ? 10 - T : 0) * 5,
+                        behavior: "smooth"
+                    });
+                    img.style.cursor = "auto"
+
+                    img.onmousemove = null
+                    img.onmouseup = null
+                }
+            }
+        }
+
+        alert('右键移动')
+    </script>
 </body>
+
 </html>
